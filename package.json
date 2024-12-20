@@ -1,0 +1,49 @@
+{
+  "name": "clb-docs",
+  "version": "0.0.1",
+  "description": "CLB Docs",
+  "scripts": {
+    "lint": "eslint . --ext mdx --max-warnings 0 && pnpm spellcheck:lint",
+    "fix": "eslint . --ext mdx --fix && pnpm spellcheck:fix",
+    "spellcheck:lint": "cspell lint \"**/*.mdx\"",
+    "spellcheck:fix": "cspell --words-only --unique \"**/*.mdx\" | sort --ignore-case | uniq > words.txt",
+    "linkcheck": "lychee --config ./lychee.toml --quiet \"./pages\"",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next build && npx serve@latest out",
+    "postbuild": "next-sitemap"
+  },
+  "dependencies": {
+    "@feelback/react": "latest",
+    "next": "latest",
+    "next-sitemap": "latest",
+    "nextra": "latest",
+    "nextra-theme-docs": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@double-great/remark-lint-alt-text": "latest",
+    "@types/node": "latest",
+    "cspell": "latest",
+    "eslint": "latest",
+    "eslint-plugin-mdx": "latest",
+    "ethers": "^5",
+    "remark": "latest",
+    "remark-code-import": "latest",
+    "remark-frontmatter": "latest",
+    "remark-gfm": "latest",
+    "remark-lint-frontmatter-schema": "latest",
+    "remark-lint-heading-style": "latest",
+    "remark-lint-list-item-indent": "latest",
+    "remark-lint-table-cell-padding": "latest",
+    "remark-lint-table-pipe-alignment": "latest",
+    "remark-lint-table-pipes": "latest",
+    "remark-lint-unordered-list-marker-style": "latest",
+    "remark-preset-lint-consistent": "latest",
+    "remark-preset-lint-recommended": "latest",
+    "typescript": "latest",
+    "unified-lint-rule": "latest",
+    "unist-util-visit": "latest"
+  }
+}
