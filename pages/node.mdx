@@ -1,0 +1,83 @@
+---
+title: Node mode
+lang: en-US
+description: How to use CLB in the node mode.
+---
+
+> TODO: cardano-node compatibility matrix
+
+> TODO: the number of nodes run by cardano-testnet
+
+# Node emulator mode
+
+For description of how this mode operates see a short
+[introduction](/use#node-emulator-mode)
+on the [Variants of use](/use) page.
+
+## Getting CLB executable
+
+The executable `cardano-node-socket-emulator` to run CLB
+is a separate cabal project located in the project repository under
+[emulator](https://github.com/mlabs-haskell/clb/tree/master/emulator) folder.
+
+Currently, no binary distribution is available so you have to include it into
+your project using [Nix](/build#using-clb-with-nix)
+or [build](/build#standalone-building) it separately.
+
+## Spinning up  CLB instance
+
+Almost like with a real `cardano-node` you have to provide a lot of things to the
+binary to spin up an instance of emualator which is effectively a degenerated network
+that consists of one only node which is in change of producing blokcs.
+
+ Whereas you can prepare all things manually, the recommended way is to use
+ [cardano-testnet](https://github.com/IntersectMBO/cardano-node/tree/master/cardano-testnet) from
+ [cardano-node](https://github.com/IntersectMBO/cardano-node) repository.
+
+ This tool is capable of generating network genesis and configuration
+ based on your preferences and running any executable that can understand it
+ by utilising `CARDANO_NODE` environment variable.
+
+ That way having `cardano-testnet` executable at hand you can do this
+ (pay attention that currently only text logging is supported):
+
+ ```bash
+ $ export CARDANO_NODE=/path/to/cardano-node-socket-emulator
+ $ cardano-testnet \
+     cardano
+     --conway-era
+     --testnet-magic 764824073
+     --nodeLoggingFormat text
+ ```
+
+ Under the hood `cardano-testnet` generates a temporary folder which contains:
+   * configuration, topology and genesis files
+   * signing keys of genesis wallets
+   * IPC socket for the nodes
+   * logs
+
+ Then it runs the binary set in `CARDANO_NODE` with the following set of parameters
+ (listed here for informational purposes):
+
+ ```bash
+ $ cardano-node-socket-emulator run \
+     --config /tmp/configuration.yaml
+     --topology /tmp/pools-keys/pool2/topology.json
+     --database-path /tmp/pools-keys/pool2/db
+     --shelley-kes-key /tmp/pools-keys/pool2/kes.skey
+     --shelley-vrf-key /tmp/pools-keys/pool2/vrf.skey
+     --byron-delegation-certificate /tmp/pools-keys/pool2/byron-delegation.cert
+     --byron-signing-key /tmp/pools-keys/pool2/byron-delegate.key
+     --shelley-operational-certificate /tmp/pools-keys/pool2/opcert.cert
+     --socket-path /tmp/socket/pool2/sock
+     --host-addr 127.0. 0.1
+     --port 43159
+ ```
+
+## Example: CLB as backend for privnet tests in CTL
+
+As a reference example you can use the way CLB is integrated with
+[cardano-transaction-lib](https://github.com/Plutonomicon/cardano-transaction-lib)
+as it's done in this [PR](https://github.com/Plutonomicon/cardano-transaction-lib/pull/1655).
+
+

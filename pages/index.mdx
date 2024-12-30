@@ -4,25 +4,60 @@ lang: en-US
 description: General information about CLB.
 ---
 
+> TODO: reprecation note on PSM
+
 # CLB - Cardano Emulator that works
 
-Welcome to the CLB! (Pronounced /klʌb/).
+Welcome to CLB (pronounced /klʌb/)!
 
-CLB (stands for _cardano-ledger backend_) is two-in-one Cardano emulator
+[CLB](https://github.com/mlabs-haskell/clb)
+(stands for _cardano-ledger backend_) is two-in-one Cardano emulator
 which can be used in two modes of operation depending on your needs:
 * as a Haskell library
 * as a cardano-node emualator
 
 These two modes have different behaviour described in [variants of use](/modes).
 
+# Maintenance
+
+CLB is maintained by [MLabs](https://www.mlabs.city) as a part of its core-tools endevor.
+Please submit an [issue](https://github.com/mlabs-haskell/clb/issues/new)
+or ask a [question](https://github.com/mlabs-haskell/clb/discussions/new/choose) on GitHub.
+CLB is an open-source project, so PRs are highly welcomed as well.
+
+# Adoption
+
+Here goes the list of projects that uses CLB or its parts:
+
+* [Atlas](https://github.com/geniusyield/atlas),
+the modern PAB by [GeniusYield](https://www.geniusyield.co/) and others
+uses CLB in lieu of decomissioned [PSM](https://github.com/mlabs-haskell/plutus-simple-model) library.
+* [CTL](https://github.com/Plutonomicon/cardano-transaction-lib),
+a Purescript-based set of tools for building sApps for browsers
+developed by [MLabs](https://www.mlabs.city) provides a way to use CLB
+instead of `cardano-node` to speed up private network tests.
+* [CEM Script](https://github.com/mlabs-haskell/cem-script),
+ a high-level Cardano SDK for building dApps from state-machine-like definition by
+ [MLabs](https://www.mlabs.city) uses bare CLB API for verifying its models.
+
+If you use CLB and your project is not on the list,
+please give us a [shout](https://github.com/mlabs-haskell/clb-docs/issues/new).
+
+# History
+
+In the case you are interested in the CLB's story we recommend reading this
+[report](https://github.com/mlabs-haskell/clb/blob/master/docs/reports/ms1/MS1-REPORT.md)
+that goes great lengths to present the whole story, particularly:
+* How the predecessor of CLB, PSM library [was born](https://github.com/mlabs-haskell/clb/blob/master/docs/reports/ms1/MS1-REPORT.md#psm-brief-history-recap).
+* What PSM looked like when [CLB was incepted](https://github.com/mlabs-haskell/clb/blob/master/docs/reports/ms1/MS1-REPORT.md#the-current-state).
+* CLB as the [next-gen of PSM](https://github.com/mlabs-haskell/clb/blob/master/docs/reports/ms1/MS1-REPORT.md#the-current-state).
+
 # Credits
 
 CLB was funded by Catalyst Fund10 [proposal](https://milestones.projectcatalyst.io/projects/1000121)
 and developed by [MLabs](https://mlabs.city)' team:
-* Ilia Rodionov
-* George Flerovsky
-* Gregory Gerasev
-* Rajdeep Maity
-* Mazen Khaddaj
-
-TODO: mention PSM
+  * George Flerovsky
+  * Gregory Gerasev
+  * Ilia Rodionov
+  * Mazen Khaddaj
+  * Rajdeep Maity

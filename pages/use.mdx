@@ -1,0 +1,55 @@
+---
+title: Variants of use
+lang: en-US
+description: Describes different options how CLB can be used.
+---
+
+# Variants of use
+
+There are two basic ways to use CLB within a project.
+
+The preferred way is to plug it as a Haskell library into your project.
+Depending on your needs you can use low-level [CLB's bare API](/lib)
+or use high-level API by pairing it with [Atlas capabilities](/atlas)
+to build transactions and tests.
+
+An alternative option is running CLB as a standalone node emulator.
+This is the only option for non-haskell projects or in cases when
+the functionality of the library is too lean for one's purposes.
+
+## Library mode
+
+In the library mode CLB emulator just maintains the pure ledger in-memory state.
+Neither is there notion of time, nor blocks.
+The genesis is also absent and a user is expected
+to provide initial fund distribution.
+
+When a transaction comes in, it is validated against the state.
+If it is valid then the state is immediately gets cranked,
+moving into the next imaginary slot,
+and the transaction is discarded.
+The only information that is preserved is transaction's datums.
+If the transaction happens to be invalid
+a negative validation result with the reason is returned to the submitter.
+
+TODO: links
+
+## Node emulator mode
+
+In the [node emulator mode](/node)
+(also can be reffered to as the socket mode or the node mode)
+things get more entangled.
+In contrast to the library mode when the emulator is just a pure state in the memory
+in the node mode the emulator represents a standalone process
+that mimics a full-fledged Cardano node behaviour to some extent.
+The process maintains an IPC socket the way the node does,
+so one can use Ouroboros mini-protocols direcrtly
+or pull in Ogmios to get more usable API.
+
+The following additional things come into play when CLB is run in the node mode:
+* A separate thread to count slots which emulates time.
+* A mempool that maintains its own so-called "cached" state.
+* A trivial block producing procedure that forges blocks
+from the content of the mempool.
+
+
