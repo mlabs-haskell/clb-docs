@@ -3,3 +3,208 @@ title: Bare CLB as a library
 lang: en-US
 description: Using CLB as a library.
 ---
+
+# Using CLB's low-level API
+
+For use-cases when just a bare emulator is required, i.e. a pure ledger state
+that can be initialized, then fed with some transactions, and finally queried
+to obtain the current UTxO state and other information low-level API described
+in this section is the best option.
+
+If you are looking for a way to build transactions, you likely need to use
+CLB library with [Atlas](/atlas).
+
+
+## `ClbT` monad transformer
+
+CLB actions are defined for a `ClbT` transformer
+which is a pure state over `ClbState`:
+
+```haskell
+newtype ClbT era m a = ClbT {unwrapClbT :: StateT (ClbState era) m a}
+```
+Also there is `Clb` monad which is just `ClbT` over `Identity`.
+
+To build the genesis state use `initClb` function, passing left `Value`, which
+set the initial value for every of ten test wallets.
+
+```haskell
+initClb ::
+  ClbConfig era ->
+  Either Api.Value [(L.Addr L.StandardCrypto, L.Coin)] ->
+  ClbState era
+```
+To supply the configuration use a default value `defaultConwayClbConfig`
+and make any needed updates.
+
+### `ClbState` datatype
+
+This section gives an overview of the state that can be accessed directly
+at user's discretion
+(keeping in mind that most state alterings should be done judiciously).
+
+The following parts of the state may pose some interest for users
+(to access fields use lenses):
+
+```haskell
+data ClbState era = ClbState
+  { ...
+  , _knownDatums :: !(M.Map PV1.DatumHash PV1.Datum)
+  , _clbLog :: !(Log LogEntry)
+  , _clbConfig :: !(ClbConfig era)
+  ...
+  }
+```
+
+`_knownDatums` field contains all known datums, i.e. inline datums
+extracted from submitted transactions as well as datums presented
+as witnesses (i.e. those that are no longer exists on-chain).
+Currently there is no way to make a distrinction between these two types of datums.
+
+`_clbLog` contains all log items, including failures.
+See the section on the [logging](/lib#logging) for details.
+
+`_clbConfig` field provides access to the CLB configuration
+(which is supposed to be read-only).
+
+## Submitting transactions
+
+The low-level API makes an assumption that the client does prepare transactions
+on their own. The only interaction with the emulator is needed at the signing stage
+when a signing key for a test wallet should be obtained and used
+using `intToCardanoSk` function which deterministically returns
+a corresponding key by a testb wallet number (1..10).
+
+### `submitTx`
+
+The action takes a transaction and
+validates it against the latest blockchain state.
+Then it applies the transaction if it is valid or indicates an error otherwise
+which is captured by `ValidationResult` datatype.
+The transaction itself is discarded. Also `submitTx` action:
+  * Updates datums cache with inline datums of transaction output
+and datums used in the witnesses set.
+  * Moves the time to the next slot, i.e. within the emulator
+(and only in the as-a-library mode) every slot contains exactly one transaction.
+
+```haskell
+submitTx ::
+  forall era m.
+  (Monad m, IsCardanoLedgerEra era) =>
+  C.Tx era ->
+  ClbT era m (ValidationResult era)
+...
+
+data ValidationResult era
+  = -- | A transaction failed to be validated by Ledger
+    Fail !(Core.Tx (CardanoLedgerEra era)) !(ValidationError era)
+  | -- | New state and a validated transaction
+    Success !(EmulatedLedgerState era) !(OnChainTx era)
+```
+
+Note, that despite the fact the `Success` return value bears
+the new state of the emulator, the state is updated under the hood
+inside `State` monad, so it is returned solely for user's convenience.
+
+## Querying UTxO set
+
+There are four actions to accomplish the job.
+
+The first two operate over ledger types:
+* `currentUtxoState` returns all `L.UTxO era` which is a wrapper around
+the mapping `Map (TxIn crypto) (TxOut era)`.
+* `getUtxosAt` returns a subset of UTxO
+which belongs to a particular `L.Address crypto`
+
+The other two operate over types from `cardano-api` (imported as `C`)
+and Plutus ledger (imported as `PV1`). Both functions return a list
+of Plutus UTxO references, i.e. `[PV1.TxOutRef]`:
+
+* `txOutRefAt` takes an address `C.AddressInEra era`
+* `txOutRefAtPaymentCred` takes an payment credential `PV1.Credential`
+
+## Working with slots
+
+The `ClbConfig` (usually based on the default value `defaultConwayClbConfig`)
+contains `SlotConfig` which defines how slots work within the emulator.
+In the library mode slot length is used solely for calculation purposes,
+since the next slot is promoted automatically when (and only when)
+a valid transaction gets submitted.
+
+`scSlotZeroTime` used for calculation wall clock time when going
+between `Slot` and `POSIXTime`
+with `slotToBeginPOSIXTime` and `posixTimeToEnclosingSlot`.
+
+```haskell
+defaultSlotConfig :: SlotConfig
+defaultSlotConfig =
+  SlotConfig
+    { scSlotLength = 1_000 -- each slot lasts for 1 second
+    , scSlotZeroTime = 0 -- starts at unix epoch start
+    }
+```
+
+### `getCurrentSlot`
+
+Purely returns `SlotNo` from `Cardano.Slotting.Slot` based on the
+ledger environment state.
+
+### `waitSlot` and `modifySlot`
+
+This is the way to tweak the slot number manually. Since there is no notion
+of time in the library mode waiting is identical to jumping to the target slot
+immediately without waiting. This is one of the crucial advantages that makes
+scenarios that depend on time blazing fast.
+
+That way `waitSlot` just promotes the current slot to a requested `SlotNo`,
+if the current slot is not greater then the requested slot.
+Oterwise, it does nothing silently.
+
+There is also more liberate `modifySlot` action which allows for an arbitrary
+function (`Slot -> Slot`) be applied over the current slot in the state.
+
+## Querying additional information
+
+The following actions provide access to useful things that likely are needed to
+work with the emulator.
+
+* `getEpochInfo` returns so-called `fixedEpochInfo` based on the slot config.
+* `getGlobals` builds and returns Shelley globals.
+* `getStakePools` lists all known stake pools (initially empty set).
+* `getClbConfig` gets the configuration with which the CLB instance was launched.
+
+## Logging
+
+CLB incorporates a simple pure log to store all events that occur within CLB.
+All messages are bound to the slot where they happen.
+
+### Core logging actions
+
+Two types of entries can be added to the log:
+* Informational messages of different levels.
+To post a message use `logInfo` function, passing it `LogEntry` value.
+* Failures, which can be indicated using `logFail` and `logError` actions.
+The latter additionally adds the error into the main log,
+so this is the preferred way.
+
+### `dumpUtxoState`
+
+In rare cases you might want to see the whole UTxO set in the log.
+This can be easily done with `dumpUtxoState` function.
+
+### `checkErrors` and  `ppLog`
+
+Once a test case is over, the log can extracted from the state and processed.
+Here the following two functions come in handy.
+
+`checkErrors :: (Monad m) => ClbT era m (Maybe String)` returns the summary
+of all failures that have happened.
+
+`ppLog` pretty formats the log using `prettyprinter` library capabilities:
+
+```haskell
+let logDoc = ppLog $ (clb ^. clbLog)
+let options = defaultLayoutOptions {layoutPageWidth = AvailablePerLine 150 1.0}
+let logString = renderString $ layoutPretty options logDoc
+putStrLn logString
+```
