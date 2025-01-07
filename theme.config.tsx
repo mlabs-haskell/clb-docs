@@ -11,7 +11,7 @@ const config: DocsThemeConfig = {
     link: "https://github.com/mlabs-haskell/clb",
   },
   footer: {
-    text: "CLB Cardano Emulator Documentation",
+    content: "CLB Cardano Emulator Documentation"
   },
   sidebar: {
     defaultMenuCollapseLevel: 1,
@@ -21,16 +21,16 @@ const config: DocsThemeConfig = {
     content: "",
   },
   editLink: {
-    text: "",
+    // text: "",
   },
-  useNextSeoProps() {
-    const { asPath } = useRouter();
-    if (asPath !== "/") {
-      return {
-        titleTemplate: "%s | CLB Docs",
-      };
-    }
-  },
+  // useNextSeoProps() {
+  //   const { asPath } = useRouter();
+  //   if (asPath !== "/") {
+  //     return {
+  //       titleTemplate: "%s | CLB Docs",
+  //     };
+  //   }
+  // },
   head: () => {
     const { asPath, defaultLocale, locale } = useRouter();
     const { frontMatter } = useConfig();

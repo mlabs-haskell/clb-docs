@@ -1,4 +1,4 @@
-{
+export default {
   "404": {
     "title": "404",
     "display": "hidden",
