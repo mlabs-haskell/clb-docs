@@ -25,7 +25,6 @@
   "devDependencies": {
     "@double-great/remark-lint-alt-text": "latest",
     "@types/node": "latest",
-    "@types/react": "19.0.2",
     "cspell": "latest",
     "eslint": "latest",
     "eslint-plugin-mdx": "latest",
