@@ -35,7 +35,7 @@ const config: DocsThemeConfig = {
     const { asPath, defaultLocale, locale } = useRouter();
     const { frontMatter } = useConfig();
     const url =
-      "https://clb.github.io/" +
+      "https://mlabs-haskell.github.io/clb-docs/" +
       (defaultLocale === locale ? asPath : `/${locale}${asPath}`);
 
     return (
