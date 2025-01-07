@@ -4,7 +4,7 @@
     "Segoe UI Symbol";
   font-weight: 440;
 
-  --nextra-navbar-height: 120;
+  --nextra-navbar-height: 120px;
 
   .nx-rounded-xl {
     border-radius: 5px;
