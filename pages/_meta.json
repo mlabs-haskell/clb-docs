@@ -1,4 +1,4 @@
-export default {
+{
   "404": {
     "title": "404",
     "display": "hidden",
@@ -24,10 +24,28 @@ export default {
       "pagination": false
     }
   },
+
   "clb": {
     "title": "Redirecting...",
     "display": "hidden"
   },
 
-  "index": "Introduction"
+  "index": {
+    "tite": "Home"
+  },
+  "use": "Variants of use",
+  "build": "Building CLB",
+
+  "clb-repo": {
+    "title": "mlabs-haskell/clb",
+    "href": "https://github.com/mlabs-haskell/clb",
+    "newWindow": true
+  },
+
+  "atlas-repo": {
+    "title": "geniusyield/atlas",
+    "href": "https://github.com/geniusyield/atlas",
+    "newWindow": true
+  }
+
 }

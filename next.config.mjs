@@ -14,7 +14,7 @@ const withNextra = nextra({
 
 export default {
   ...withNextra(),
-  basePath: '/clb-docs',
+  // basePath: '/clb-docs',
   output: 'export',
   images: {
     unoptimized: true,

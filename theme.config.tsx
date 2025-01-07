@@ -3,15 +3,24 @@ import { DocsThemeConfig } from "nextra-theme-docs";
 import { useRouter } from "next/router";
 import { useConfig } from "nextra-theme-docs";
 import "@feelback/react/styles/feelback.css";
+import Image from "next/image";
 
 const config: DocsThemeConfig = {
-  logo: (<h1>CLB Documentation</h1>),
+  logo: (
+    <Image
+      src={"./logo.svg"}
+      alt=""
+      width={150}
+      height={30}
+      className="nx-logo"
+    />
+  ),
   darkMode: true,
   project: {
     link: "https://github.com/mlabs-haskell/clb",
   },
   footer: {
-    content: "CLB Cardano Emulator Documentation"
+    text: "CLB Cardano Emulator Documentation"
   },
   sidebar: {
     defaultMenuCollapseLevel: 1,
@@ -21,16 +30,16 @@ const config: DocsThemeConfig = {
     content: "",
   },
   editLink: {
-    // text: "",
+    text: "",
   },
-  // useNextSeoProps() {
-  //   const { asPath } = useRouter();
-  //   if (asPath !== "/") {
-  //     return {
-  //       titleTemplate: "%s | CLB Docs",
-  //     };
-  //   }
-  // },
+  useNextSeoProps() {
+    const { asPath } = useRouter();
+    if (asPath !== "/") {
+      return {
+        titleTemplate: "%s | CLB Docs",
+      };
+    }
+  },
   head: () => {
     const { asPath, defaultLocale, locale } = useRouter();
     const { frontMatter } = useConfig();
