@@ -4,3 +4,73 @@ lang: en-US
 description: How to start using CLB
 ---
 
+# Getting started with CLB
+
+The way you use CLB mostly depends on the mode you want to use.
+Please refer to [variants of use](/use) page
+to figure out which better suits your needs.
+
+# Using standlone CLB library
+
+Use one of the following methods and refer to the library [API](/use/lib).
+
+## Using CLB from GitHub
+
+Use `source-repository-package` with the latest revision in `tag` field
+to add CLB library to your project in
+`cabal.project`:
+
+```
+source-repository-package
+  type: git
+  location: https://github.com/mlabs-haskell/clb
+  tag: 080e2b4852f162d33e8a3d5e2faaa9b5400d878c
+  subdir:
+    clb
+```
+
+## Using CLB from CHaP
+
+Currently CLB is not on the CHaP,
+but we have [plans](https://github.com/mlabs-haskell/clb/issues/65) to do that.
+
+# Using CLB library with Atlas
+
+Unfortunately, Atlas setup currently is more involved.
+You can find an example in this [repository](https://github.com/mlabs-haskell/atlas-bet-ref).
+
+For further information please refer to this [page](/use/atlas).
+
+# Using CLB executable
+
+In case you want to use CLB in the node emulation mode
+you need only the executable.
+
+Please refer to [this page](/use/node) for further information.
+
+## Using CLB executable with Nix
+
+For a Nix setup you can use the `flake.nix` directly:
+
+```nix
+...
+inputs = {
+  ...
+  # CLB emulator
+  clb.url = "github:mlabs-haskell/clb";
+  ...
+
+  clb = clb.packages.${system}."socket-emulator:exe:cardano-node-socket-emulator";
+  ...
+```
+
+## Building executable locally
+
+Alternatively you can build the executable locally, please refer to
+[build](/build) page to get to the devshell. You can find the executable after
+building CLB:
+
+```bash
+$ cabal list-bin cardano-node-socket-emulator
+.../clb/dist-newstyle/.../cardano-node-socket-emulator
+```

@@ -4,19 +4,28 @@ lang: en-US
 description: General information about CLB.
 ---
 
-> TODO: reprecation note on PSM
-
 # CLB - Cardano Emulator that works
 
 Welcome to CLB (pronounced /klʌb/)!
 
 [CLB](https://github.com/mlabs-haskell/clb)
-(stands for _cardano-ledger backend_) is two-in-one Cardano emulator
+(stands for _Cardano Ledger Backend_) is two-in-one Cardano emulator
 which can be used in two modes of operation depending on your needs:
 * as a Haskell library
 * as a cardano-node emualator
 
 These two modes have different aplications and behaviour, see [variants of use](/use).
+Check out [getting started](/getting-started) page to get help on the ways
+you can start using CLB.
+
+The core CLB library has been developed with following ideas in mind:
+* Being fully compatible with `cardano-ledger` codebase.
+* Minimal dependency set. CLB depends only on `plutus` and `cardano-ledger`.
+No `plutus-apps` or `cardano-node` or Ouroboros.
+* Works for Plutus V1, Plutus V2, and Plutus V3.
+* Support for Babbage and Conway eras (one at a time though).
+* Realistic estimation usage of resources even when they excess limits.
+* Using pure state and being blazingly fast to facilitate property-based testing.
 
 # Maintenance
 

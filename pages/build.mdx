@@ -1,13 +1,57 @@
 ---
-title: Building and using CLB
+title: Building and developing CLB
 lang: en-US
-description: How to use CLB in the node mode.
+description: How to build and develop CLB.
 ---
 
-# Building CLB
+# Building locally
 
-## Building locally
+CLB currently uses GHC 9.6.6 with `cabal` and [CHaP](https://input-output-hk.github.io/cardano-haskell-packages/).
+We do lock all versions of dependecies with `cabal.project.freeze` file.
 
-## Using CLB from CHaP
+Since some Cardano dependencies require some specific setup it might be tricky
+to use a default GHC, you need to install alternative cryprographic libraries
+manually. So instead we recommend one of two ways:
+1. Use Nix [CLB devshell](/build#nix-devshell) shipped with CLB.
+2. Use IOG's `devx` [default devshell](/build#devx-default-shell).
 
-## Using CLB executable with Nix
+(1) is a preferred method since it brings all needed stuff to the shell like
+linters, formatters, pre-commit hooks and so on.
+
+## Nix devshell
+
+Ensure you run `nix` greater than version 2.18.4.
+Type `nix develop` to enter the dev shell:
+
+```bash
+$ nix develop
+[nix CLB ~/src/mlabs/clb]$ cabal update
+...
+[nix CLB ~/src/mlabs/clb]$ cabal build all
+...
+```
+
+To run tools use `pre-commit` command:
+
+```bash
+$ pre-commit run --all-files
+cabal-fmt................................................................Passed
+deadnix..................................................................Passed
+fourmolu.................................................................Passed
+hlint....................................................................Passed
+nixpkgs-fmt..............................................................Passed
+statix...................................................................Passed
+```
+
+## `devx` default shell
+
+To enter the default `devx` shell use the following command:
+
+```bash
+$ nix develop github:input-output-hk/devx#ghc96-iog-full --no-write-lock-file --refresh
+$ cabal update
+...
+$ cabal build all
+...
+```
+
