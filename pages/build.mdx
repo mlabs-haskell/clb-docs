@@ -6,17 +6,17 @@ description: How to build and develop CLB.
 
 # Building locally
 
-CLB currently uses GHC 9.6.6 with `cabal` and [CHaP](https://input-output-hk.github.io/cardano-haskell-packages/).
-We do lock all versions of dependecies with `cabal.project.freeze` file.
+CLB uses GHC 9.6.6 with `cabal` and [CHaP](https://input-output-hk.github.io/cardano-haskell-packages/).
+We lock all versions of dependencies with `cabal.project.freeze` file.
 
 Since some Cardano dependencies require some specific setup it might be tricky
-to use a default GHC, you need to install alternative cryprographic libraries
+to use a default GHC, you need to install alternative cryptographic libraries
 manually. So instead we recommend one of two ways:
 1. Use Nix [CLB devshell](/build#nix-devshell) shipped with CLB.
 2. Use IOG's `devx` [default devshell](/build#devx-default-shell).
 
-(1) is a preferred method since it brings all needed stuff to the shell like
-linters, formatters, pre-commit hooks and so on.
+(1) is a preferred method since it brings all the needed stuff to the shell -
+linters, formatters, pre-commit hooks, and so on.
 
 ## Nix devshell
 
