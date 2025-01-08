@@ -1,7 +1,7 @@
 ---
 title: Variants of use
 lang: en-US
-description: Describes different options how CLB can be used.
+description: Describes different options for how CLB can be used.
 ---
 
 # Variants of use
@@ -20,32 +20,32 @@ the functionality of the library is too lean for one's purposes.
 ## Library mode
 
 In the library mode CLB emulator just maintains the pure ledger in-memory state.
-Neither is there notion of time, nor blocks.
+Neither is there a notion of time, nor blocks.
 The genesis is also absent and a user is expected
 to provide initial fund distribution.
 
 When a transaction comes in, it is validated against the state.
-If it is valid then the state is immediately gets cranked,
+If it is valid then the state immediately gets cranked,
 moving into the next imaginary slot,
 and the transaction is discarded.
-The only information that is preserved is transaction's datums.
+The only information that is preserved is transaction datums.
 If the transaction happens to be invalid
 a negative validation result with the reason is returned to the submitter.
 
 ## Node emulator mode
 
 In the [node emulator mode](/use/node)
-(also can be reffered to as the socket mode or the node mode)
+(also can be referred to as the socket mode or the node mode)
 things get more entangled.
 In contrast to the library mode when the emulator is just a pure state in the memory
-in the node mode the emulator represents a standalone process
-that mimics a full-fledged Cardano node behaviour to some extent.
+in the node mode, the emulator represents a standalone process
+that mimics a full-fledged Cardano node behavior to some extent.
 The process maintains an IPC socket the way the node does,
-so one can use Ouroboros mini-protocols direcrtly
-or pull in Ogmios to get more usable API.
+so one can use Ouroboros mini-protocols directly
+or pull in Ogmios to get a more usable API.
 
 The following additional things come into play when CLB is run in the node mode:
-* A separate thread to count slots which emulates time.
+* A separate thread to count slots that emulates time.
 * A mempool that maintains its own so-called "cached" state.
-* A trivial block producing procedure that forges blocks
+* A trivial block-producing procedure that forges blocks
 from the content of the mempool.
