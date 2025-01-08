@@ -1,7 +1,7 @@
 ---
 title: Use CLB with Atlas
 lang: en-US
-description: How to pair CLB with Atlas and use higher-level API.
+description: How to combine CLB with Atlas and use higher-level API.
 ---
 
 # Using CLB with Atlas
@@ -10,11 +10,11 @@ This page gives an overview of how CLB can be used together with
 [Atlas](https://github.com/geniusyield/atlas).
 
 CLB [low-level](/use/lib) API works with serialized transactions.
-If your project can produce them somehow you can use it directly.
+If your project can produce them somehow you can use them directly.
 But if not &ndash; you need some off-chain machinery to build them.
-This is a non-trivial tasks which is rather expensive to be done twice.
+This is a non-trivial task which is rather expensive to be done twice.
 This is why we decided to get rid of the old custom PSM machinery for
-transaction constructing and utlize Atlas PAB.
+transaction construction and utilize Atlas PAB.
 
 As a part of the CLB development effort
 [**unified testing**](https://atlas-app.io/getting-started/testing#overview-of-unified-testing-in-atlas)
@@ -22,8 +22,8 @@ feature has been implemented in Atlas PAB.
 It allows writing off-chain code for transaction building once
 and reuse it in:
 * CBL-emulator tests
-* a real private network tests
-* the application itself
+* Private network tests
+* The application itself
 
 A sample project that uses CLB with Atlas can be found
 in [mlabs-haskell/atlas-bet-ref](https://github.com/mlabs-haskell/atlas-bet-ref)
