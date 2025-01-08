@@ -30,11 +30,10 @@
     "display": "hidden"
   },
 
-  "index": {
-    "tite": "Home"
-  },
-  "use": "Variants of use",
-  "build": "Building CLB",
+  "index": {},
+  "getting-started": {},
+  "use": {},
+  "build": {},
 
   "clb-repo": {
     "title": "mlabs-haskell/clb",
@@ -47,5 +46,4 @@
     "href": "https://github.com/geniusyield/atlas",
     "newWindow": true
   }
-
 }
