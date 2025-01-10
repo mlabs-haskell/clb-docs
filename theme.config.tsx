@@ -8,7 +8,7 @@ import Image from "next/image";
 const config: DocsThemeConfig = {
   logo: (
     <Image
-      src={"/public/logo.svg"}
+      src={"/logo.svg"}
       alt=""
       width={150}
       height={30}
