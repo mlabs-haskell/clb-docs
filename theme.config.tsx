@@ -8,7 +8,7 @@ import Image from "next/image";
 const config: DocsThemeConfig = {
   logo: (
     <Image
-      src={"/logo.svg"}
+      src={"/clb-docs/logo.svg"}
       alt=""
       width={150}
       height={30}
